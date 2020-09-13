@@ -218,8 +218,8 @@ func printDependencies(gpackage models.Package) {
 		for _, revDep := range revDeps {
 			fmt.Println("  - " + revDep)
 		}
+		fmt.Println("")
 	}
-	fmt.Println("")
 }
 
 func printChangelog(commits []*models.Commit) {
