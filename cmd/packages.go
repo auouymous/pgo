@@ -18,10 +18,12 @@ import (
 
 func showPackage(searchTerm string, first bool) {
 
+	if !quiet {
 	fmt.Println()
 	fmt.Println("[ Results for search key : ", Bold(searchTerm), " ]")
 	fmt.Println("Searching...")
 	fmt.Println()
+	}
 
 	gpackage, err := findPackage(searchTerm, first)
 	if err != nil {
@@ -30,6 +32,7 @@ func showPackage(searchTerm string, first bool) {
 		fmt.Println()
 	}
 
+	if !quiet {
 	fmt.Println("")
 	fmt.Println("")
 	fmt.Println(Underline(Bold(strings.Repeat(" ", 50-len(gpackage.Atom)/2) + strings.Repeat(" ", len(gpackage.Atom)) + strings.Repeat(" ", 50-len(gpackage.Atom)/2))))
@@ -39,6 +42,7 @@ func showPackage(searchTerm string, first bool) {
 	fmt.Println(strings.Repeat(" ", 50-len(gpackage.Description())/2) + gpackage.Description())
 	fmt.Println(strings.Repeat(" ", 50-len(gpackage.Versions[0].Homepage[0])/2) + gpackage.Versions[0].Homepage[0])
 	fmt.Println("")
+	}
 
 	if showVersions {
 		printVersions(gpackage.Versions)
@@ -68,13 +72,17 @@ func showPackage(searchTerm string, first bool) {
 		printChangelog(gpackage.Commits)
 	}
 
+	if !quiet {
 	fmt.Println()
 	fmt.Println(Underline(Bold(strings.Repeat(" ", 50-len(gpackage.Atom)/2) + strings.Repeat(" ", len(gpackage.Atom)) + strings.Repeat(" ", 50-len(gpackage.Atom)/2))))
 	fmt.Println()
+	}
 }
 
 func printVersions(versions []*models.Version) {
+	if !quiet {
 	fmt.Println(Underline(Bold(Green("Available Versions"))))
+	}
 	sort.Slice(versions, func(i, j int) bool {
 		return versions[i].GreaterThan(*versions[j])
 	})
@@ -110,11 +118,15 @@ func printVersions(versions []*models.Version) {
 		}
 		fmt.Println()
 	}
+	if !quiet {
 	fmt.Println("")
+	}
 }
 
 func printMetadata(gpackage models.Package) {
+	if !quiet {
 	fmt.Println(Underline(Bold(Green("Package Metadata"))))
+	}
 	if gpackage.Longdescription != "" {
 		fmt.Println(Bold("  Full description: "), gpackage.Longdescription)
 	}
@@ -157,26 +169,36 @@ func printMetadata(gpackage models.Package) {
 		}
 	}
 	fmt.Println()
+	if !quiet {
 	fmt.Println()
+	}
 }
 
 func printBugs(bugs []*models.Bug) {
 	if len(bugs) > 0 {
+		if !quiet {
 		fmt.Println(Underline(Bold(Green("Bugs"))))
+		}
 		for _, bug := range bugs {
 			fmt.Println("  " + bug.Id + ": " + bug.Summary)
 		}
+		if !quiet {
 		fmt.Println()
+		}
 	}
 }
 
 func printPullRequests(pullRequests []*models.GithubPullRequest) {
 	if len(pullRequests) > 0 {
+		if !quiet {
 		fmt.Println(Underline(Bold(Green("Pull Requests"))))
+		}
 		for _, pr := range pullRequests {
 			fmt.Println("  " + pr.Id + ": " + pr.Title + " (" + pr.Author + ")")
 		}
+		if !quiet {
 		fmt.Println()
+		}
 	}
 }
 
@@ -188,7 +210,9 @@ func printQAReports(gpackage models.Package) {
 		}
 	}
 	if len(gpackage.PkgCheckResults) > 0 || qareportsfound {
+		if !quiet {
 		fmt.Println(Underline(Bold(Green("QA Report"))))
+		}
 		if len(gpackage.PkgCheckResults) > 0 {
 			fmt.Println(Bold("  All Versions: "))
 		}
@@ -203,13 +227,17 @@ func printQAReports(gpackage models.Package) {
 				}
 			}
 		}
+		if !quiet {
 		fmt.Println("")
+		}
 	}
 }
 
 func printDependencies(gpackage models.Package) {
 	if len(gpackage.ReverseDependencies) > 0 {
+		if !quiet {
 		fmt.Println(Underline(Bold(Green("Reverse Dependencies"))))
+		}
 		var revDeps []string
 		for _, revDep := range gpackage.ReverseDependencies {
 			revDeps = append(revDeps, revDep.ReverseDependencyAtom)
@@ -218,12 +246,16 @@ func printDependencies(gpackage models.Package) {
 		for _, revDep := range revDeps {
 			fmt.Println("  - " + revDep)
 		}
+		if !quiet {
 		fmt.Println("")
+		}
 	}
 }
 
 func printChangelog(commits []*models.Commit) {
+	if !quiet {
 	fmt.Println(Underline(Bold(Green("Changelog"))))
+	}
 
 	sort.Slice(commits, func(i, j int) bool {
 		return commits[i].PrecedingCommits > commits[j].PrecedingCommits

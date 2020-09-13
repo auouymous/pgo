@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+var quiet bool
+
 var showBugs bool
 var showPullRequests bool
 var showChangelog bool
@@ -44,6 +46,8 @@ var addCmd = &cobra.Command{
 func Execute() {
 
 	cobra.OnInitialize(initConfig)
+
+	rootCmd.Flags().BoolVarP(&quiet, "quiet", "", false, "Reduce console output")
 
 	rootCmd.Flags().BoolVarP(&searchPackageResults, "search", "s", viper.GetBool("packages.search"), "Search for packages")
 	rootCmd.Flags().BoolVarP(&showBugs, "bugs", "b", false, "Search bugs related to the packages")
